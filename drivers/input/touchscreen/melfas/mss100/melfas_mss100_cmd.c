@@ -2379,6 +2379,15 @@ out:
 	input_info(true, &info->client->dev, "%s: %s\n", __func__, buff);	
 }
 
+#ifdef CONFIG_TOUCHSCREEN_MELFAS_MSS100_FOD_SUPPORT
+static ssize_t fod_pressed_show(struct device *dev, struct device_attribute *attr, char *buf) {
+	struct sec_cmd_data *sec = dev_get_drvdata(dev);
+	struct mms_ts_info *info = container_of(sec, struct mms_ts_info, sec);
+
+	return snprintf(buf, PAGE_SIZE, "%u\n", info->fod_pressed);
+}
+#endif
+
 /**
  * Command : Unknown cmd
  */
@@ -2755,6 +2764,9 @@ static DEVICE_ATTR(support_feature, 0444, read_support_feature, NULL);
 static DEVICE_ATTR(fod_pos, 0444, fod_position_show, NULL);
 static DEVICE_ATTR(fod_info, 0444, fod_info_show, NULL);
 static DEVICE_ATTR(virtual_prox, 0664, protos_event_show, protos_event_store);
+#ifdef CONFIG_TOUCHSCREEN_MELFAS_MSS100_FOD_SUPPORT
+static DEVICE_ATTR(fod_pressed, 0444, fod_pressed_show, NULL);
+#endif
 
 /**
  * Sysfs - cmd attr info
@@ -2772,6 +2784,9 @@ static struct attribute *mms_cmd_attr[] = {
 	&dev_attr_fod_pos.attr,
 	&dev_attr_fod_info.attr,
 	&dev_attr_virtual_prox.attr,
+#ifdef CONFIG_TOUCHSCREEN_MELFAS_MSS100_FOD_SUPPORT
+	&dev_attr_fod_pressed.attr,
+#endif
 	NULL,
 };
 
